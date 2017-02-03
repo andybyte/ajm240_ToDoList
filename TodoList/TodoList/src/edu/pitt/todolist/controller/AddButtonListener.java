@@ -2,6 +2,8 @@ package edu.pitt.todolist.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
 public class AddButtonListener implements ActionListener {
 	Controller controller;
@@ -11,8 +13,11 @@ public class AddButtonListener implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		
+		java.sql.Timestamp timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+
 		String desc = controller.getView().getInput().getText();
-		controller.getModel().addListItem(desc);
+		controller.getModel().addListItem(0, desc, timeStamp);
 		controller.getView().addToList(desc);
 		controller.getView().getInput().setText("");
     }
