@@ -132,6 +132,7 @@ public class Model {
 			for (int i : vectorRemove){
 				statement = this.connector.createStatement();
 				String qry = "DELETE FROM `ajm240is1017`.`Todos` WHERE `idTodos`='"+i+"';";
+				//test
 				System.out.println(qry);
 				statement.execute(qry);
 				System.out.println("Item Removed");	
