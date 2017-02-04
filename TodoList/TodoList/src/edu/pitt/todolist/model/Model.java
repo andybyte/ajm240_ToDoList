@@ -2,8 +2,6 @@ package edu.pitt.todolist.model;
 
 import java.util.Vector;
 import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.net.URL;
 
 //The following steps are involved with making a typical database query:
 //– Load the driver
@@ -14,8 +12,6 @@ import java.net.URL;
 
 public class Model {
 	private Vector<ListItem> todoList;
-	private ResultSet rs;
-	private Statement statement;
 	private Connection connector;
 	
 	
@@ -76,17 +72,6 @@ public class Model {
 		
 		if (checkString == 0) {
 			
-//			String qry = "INSERT INTO ajm240is1017.Todos(idTodos, Description, timeStamp) VALUES (" + idTodos + ", ‘" + description + "’ , " + timeStamp + ");";
-//			String qry = "INSERT INTO ajm240is1017.Todos(idTodos, Description, timeStamp) VALUES (0,'Bologna',2017-01-01 02:00:00);";
-//			INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Descripton`) VALUES ('01', 'Testing');
-
-//			String qry = "INSERT INTO ajm240is1017.Todos ";
-//			qry = qry + "('idTodos', 'Description') "; 
-//			qry = qry + " VALUES ";
-//			qry = qry + "('1', 'John') ;";
-//			System.out.print(qry);
-			
-			
 			try {
 				// See if the table is empty
 				String qry = "SELECT * FROM ajm240is1017.Todos;";
@@ -114,54 +99,12 @@ public class Model {
 						newID = Integer.parseInt(rsMax.getString(1)) + 1;	
 					}
 					rsMax.close();
-					System.out.println(newID);
 					
 					String qryAddNew = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"');";
 					Statement statementNew = this.connector.createStatement();
 					statementNew.execute(qryAddNew);
 					System.out.println("Item Added at " + newID);
 				}
-				
-//				if (maxID.getRow() > 0) {
-//				    do {
-//				    	System.out.println("I have rows.");
-//				    	System.out.println("Hellooo");
-//						System.out.println("Max:" + maxID.getString(1));
-//						
-//				    } while(maxID.next());
-//				} else {
-//				    // No data
-//					System.out.println("I don't have rows");
-//				}
-				
-//				String qry = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"');";
-//				statement.execute(qry);
-//				System.out.println("Item Added");
-				
-//				Statement statement = this.connector.createStatement();
-//				
-//				String getMax = "SELECT MAX(`idTodos`) FROM `ajm240is1017`.`Todos`";
-//				ResultSet maxID = statement.executeQuery(getMax);
-//				
-//				
-//				while (maxID.next()) {
-//					System.out.println("Hellooo");
-//					size(maxID);
-////					System.out.println("Max:" + maxID.getString(1));
-////					newID = Integer.parseInt(maxID.getString(1)) + 1;
-//				}
-//				
-//				String qry = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"');";
-//				statement.execute(qry);
-//				System.out.println("Item Added");
-
-				
-				
-//				String qry = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"');";
-//				statement.execute(qry);
-//				System.out.println("Item Added");
-//				this.todoList.add(new ListItem(idTodos, description, timeStamp));
-			
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -183,7 +126,7 @@ public class Model {
 			}
 		}
 		for (ListItem item : itemsToDelete) {
-			todoList.remove(item);
+			todoList.remove(item); 
 		}
 		
 		Statement statement;
@@ -191,9 +134,8 @@ public class Model {
 			for (int i : vectorRemove){
 				statement = this.connector.createStatement();
 				String qry = "DELETE FROM `ajm240is1017`.`Todos` WHERE `idTodos`='"+i+"';";
-				System.out.println(qry);
 				statement.execute(qry);
-				System.out.println("Item Removed");	
+				System.out.println("Item Removed at " + i);	
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
