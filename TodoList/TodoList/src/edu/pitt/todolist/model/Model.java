@@ -18,11 +18,13 @@ public class Model {
 	public Model() {
 		this.todoList = new Vector<ListItem>();
 		
+		// Parts to create a connection to the database:
 		String strServerAddress = "jdbc:mysql://sis-teach-01.sis.pitt.edu:3306/ajm240is1017";
 		String strUserName = "ajm240is1017";
 		String strPassword = "ajm240@pitt.edu";
 		String qry = "SELECT * FROM ajm240is1017.Todos;";
 		
+		// Connect to database and add each item to the Model's Vector of ListItems:
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 				connector = DriverManager.getConnection(strServerAddress,strUserName,strPassword);
@@ -30,8 +32,7 @@ public class Model {
 				ResultSet rs = statement.executeQuery(qry);
 				while(rs.next()) {
 					this.todoList.add(new ListItem(rs.getInt("idTodos"),rs.getString("Description"), rs.getTimestamp("timeStamp")));
-				}
-				
+				}				
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -52,9 +53,12 @@ public class Model {
 		int newID = 0;
 		int rowCount = 0;
 		
+		// Check to see if the task is empty or a string:
 		if (description.equals("")) {
 			checkString = 1;
 		} else {
+			
+			// Check to see if the task already exists in the list:
 			try {
 				Statement statement = this.connector.createStatement();
 				String qry = "SELECT * FROM ajm240is1017.Todos;";
@@ -73,7 +77,7 @@ public class Model {
 		if (checkString == 0) {
 			
 			try {
-				// See if the table is empty
+				// See if the table is empty, if so we'll add a task with ID 0.
 				String qry = "SELECT * FROM ajm240is1017.Todos;";
 				Statement statement = this.connector.createStatement();
 				ResultSet rs = statement.executeQuery(qry);
@@ -91,7 +95,7 @@ public class Model {
 					
 				} else {
 					
-					// The table has at least one row and we can attempt a new ID.
+					// The table has at least one row and we can attempt a new ID by taking the highest ID number and adding 1.
 					String getMax = "SELECT MAX(`idTodos`) FROM `ajm240is1017`.`Todos`";
 					Statement statementMax = this.connector.createStatement();
 					ResultSet rsMax = statementMax.executeQuery(getMax);
@@ -100,6 +104,7 @@ public class Model {
 					}
 					rsMax.close();
 					
+					// Create a new task in the database.
 					String qryAddNew = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"');";
 					Statement statementNew = this.connector.createStatement();
 					statementNew.execute(qryAddNew);
@@ -111,12 +116,15 @@ public class Model {
 			}
 			
 		} else {
+			// Item already exists or the task string is empty.
 			System.out.println("The task already exists or the field is empty. Please add a new task.");
 		}
 		
 	}
 	
 	public void deleteListItem(String description) {
+		
+		// Grab which items are selected and delete them from the model and the database.
 		Vector<Integer> vectorRemove = new Vector<Integer>();
 		Vector<ListItem> itemsToDelete = new Vector<ListItem>();
 		for (ListItem item : todoList) {
@@ -129,6 +137,7 @@ public class Model {
 			todoList.remove(item); 
 		}
 		
+		// Now remove from the database.
 		Statement statement;
 		try {
 			for (int i : vectorRemove){

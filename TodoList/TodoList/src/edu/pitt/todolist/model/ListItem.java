@@ -2,10 +2,9 @@ package edu.pitt.todolist.model;
 
 import java.sql.Timestamp;
 
-//import java.text.SimpleDateFormat;
-
-
 public class ListItem {
+	
+	// Properties for the item
 	private String description;
 	private int idTodos;
 	private Timestamp timeStamp; 

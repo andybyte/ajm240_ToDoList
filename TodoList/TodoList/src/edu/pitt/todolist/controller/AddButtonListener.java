@@ -14,6 +14,8 @@ public class AddButtonListener implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		
+		// Grab the timestamp of when the button was pressed to create the task.
+		
 		java.sql.Timestamp timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
 
 		String desc = controller.getView().getInput().getText();
