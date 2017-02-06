@@ -2,7 +2,11 @@ package edu.pitt.todolist.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Vector;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 
 public class DeleteButtonListener implements ActionListener {
 	Controller controller;
@@ -11,8 +15,8 @@ public class DeleteButtonListener implements ActionListener {
 		this.controller = controller;
 	}
 	
-	public void actionPerformed(ActionEvent e) {
-		String[] selectedItems = controller.getView().getTodoList().getSelectedItems();
+	public void actionPerformed(ActionEvent e) {		
+		List<String> selectedItems = controller.getView().getTodoList().getSelectedValuesList();
 		Vector<String> selectedItemVector = new Vector<String>();
 		for (String selectedItem : selectedItems) {
 			controller.getModel().deleteListItem(selectedItem);

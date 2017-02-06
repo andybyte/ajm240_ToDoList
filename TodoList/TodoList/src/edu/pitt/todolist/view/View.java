@@ -9,14 +9,18 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class View {
 	private JFrame window;
 	private JButton addButton;
 	private JButton deleteButton;
-	private List todoList;
-	private TextField textField;
+	private JList todoList;
+	private DefaultListModel listModel;
+	private JTextField jtxtField;
 	
 	public View() {
 		window = new JFrame("ToDoList");
@@ -25,17 +29,21 @@ public class View {
 
 	    JPanel listPanel = new JPanel();
 	    
-	    todoList = new List(10, true);
-	    todoList.setMaximumSize(new Dimension(280, 200));
-	    todoList.setMinimumSize(new Dimension(280, 200));
+	    // Building a list
+		listModel = new DefaultListModel();
+		todoList = new JList(listModel);
+		
+		
 	    listPanel.add(todoList);
 	    
 	    panel.add(listPanel);
 
 		JLabel label = new JLabel("Please enter item here:");
 		panel.add(label);
-		textField = new TextField("list item");
-		panel.add(textField);
+		
+		jtxtField = new JTextField("list item");
+		jtxtField.setColumns(20);
+		panel.add(jtxtField);
 
 		addButton = new JButton();
 		addButton.setText("Add");
@@ -60,28 +68,23 @@ public class View {
 		return deleteButton;
 	}
 
-	public List getTodoList() {
+	public JList<String> getTodoList() {
 		return todoList;
 	}
 
-	public TextField getInput() {
-		return textField;
+	public JTextField getInput() {
+		return jtxtField;
 	}
 
 	public void addToList(String description) {
-		todoList.add(description);
+		listModel.addElement(description);
 	}
 
 	public void removeFromList(Vector<String> selectedItems) {
-		Vector<String> list = new Vector<String>();
-		for (String listItem : todoList.getItems()) {
-			if (!selectedItems.contains(listItem)) {
-				list.add(listItem);
+		for (int i = 0; i < listModel.size(); i++) {
+			if (selectedItems.contains(listModel.getElementAt(i))) {
+				listModel.removeElementAt(i);;
 			}
-		}
-		todoList.removeAll();
-		for (String item : list) {
-			todoList.add(item);
 		}
 	}
 }
