@@ -1,11 +1,7 @@
 package edu.pitt.todolist.view;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.List;
-import java.awt.TextField;
 import java.util.Vector;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;

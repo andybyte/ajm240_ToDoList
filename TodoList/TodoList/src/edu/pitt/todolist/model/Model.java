@@ -1,5 +1,6 @@
 package edu.pitt.todolist.model;
 
+import java.util.HashMap;
 import java.util.Vector;
 import java.sql.*;
 
@@ -12,27 +13,32 @@ import java.sql.*;
 
 public class Model {
 	private Vector<ListItem> todoList;
+	private Vector<User> userList;
 	private Connection connector;
+	private HashMap mapTodoToUser;
 	
 	
 	public Model() {
 		this.todoList = new Vector<ListItem>();
+		this.userList = new Vector<User>();
+		this.mapTodoToUser = new HashMap();
 		
-		// Parts to create a connection to the database:
+		// Parts to create a connection to the databases:
 		String strServerAddress = "jdbc:mysql://sis-teach-01.sis.pitt.edu:3306/ajm240is1017";
 		String strUserName = "ajm240is1017";
 		String strPassword = "ajm240@pitt.edu";
-		String qry = "SELECT * FROM ajm240is1017.Todos;";
 		
-		// Connect to database and add each item to the Model's Vector of ListItems:
+		// Connect to Todos database and add each item to the Model's Vector of ListItems:
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 				connector = DriverManager.getConnection(strServerAddress,strUserName,strPassword);
 				Statement statement = connector.createStatement();
+				String qry = "SELECT * FROM ajm240is1017.Todos;";
 				ResultSet rs = statement.executeQuery(qry);
 				while(rs.next()) {
 					this.todoList.add(new ListItem(rs.getInt("idTodos"),rs.getString("Description"), rs.getTimestamp("timeStamp")));
-				}				
+				}	
+				rs.close();
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -46,6 +52,58 @@ public class Model {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
+		
+		// Connect to Users database and add each item to the Model's Vector of ListItems:
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+				connector = DriverManager.getConnection(strServerAddress,strUserName,strPassword);
+				Statement statement = connector.createStatement();
+				String qry = "SELECT * FROM ajm240is1017.Users;";
+				ResultSet rs = statement.executeQuery(qry);
+				while(rs.next()) {
+					this.userList.add(new User(rs.getInt("idUsers"),rs.getString("FirstName"), rs.getString("LastName")));
+				}	
+				rs.close();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
+		// Create the mapping table Todos_Users
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+				connector = DriverManager.getConnection(strServerAddress,strUserName,strPassword);
+				Statement statement = connector.createStatement();
+				String qry = "SELECT * FROM ajm240is1017.Todos_Users;";
+				ResultSet rs = statement.executeQuery(qry);
+				while(rs.next()) {
+//					this.userList.add(new User(rs.getInt("idUsers"),rs.getString("FirstName"), rs.getString("LastName")));
+					this.mapTodoToUser.put(rs.getInt("todo_id"), rs.getInt("user_id"));
+				}	
+				rs.close();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}			
+		
 	}
 
 	public void addListItem(int idTodos, String description, Timestamp timeStamp) {
@@ -108,7 +166,11 @@ public class Model {
 					String qryAddNew = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"');";
 					Statement statementNew = this.connector.createStatement();
 					statementNew.execute(qryAddNew);
-					System.out.println("Item Added at " + newID);
+					// Add new mapping
+					String qryAddNewMap = "INSERT INTO `ajm240is1017`.`Todos_Users` (`todo_id`, `user_id`) VALUES ('" + newID + "', '"+1009+"');";
+					Statement statementNewMap = this.connector.createStatement();
+					statementNew.execute(qryAddNewMap);
+					System.out.println("Map Added at " + newID);
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
