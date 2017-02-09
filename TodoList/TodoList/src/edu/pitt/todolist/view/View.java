@@ -3,6 +3,7 @@ package edu.pitt.todolist.view;
 import java.awt.FlowLayout;
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -17,6 +18,7 @@ public class View {
 	private JList todoList;
 	private DefaultListModel listModel;
 	private JTextField jtxtField;
+	private JComboBox<String> cmbUser;
 	
 	public View() {
 		window = new JFrame("ToDoList");
@@ -34,7 +36,7 @@ public class View {
 	    
 	    panel.add(listPanel);
 
-		JLabel label = new JLabel("Please enter item here:");
+		JLabel label = new JLabel("Please enter task:");
 		panel.add(label);
 		
 		jtxtField = new JTextField("list item");
@@ -48,12 +50,32 @@ public class View {
 		deleteButton = new JButton();
 		deleteButton.setText("Delete");
 		panel.add(deleteButton);
-	    
+		
+		JLabel userLabel = new JLabel("Assigning task to:");
+		panel.add(userLabel);
+		
+		cmbUser = new JComboBox<String>();
+		panel.add(cmbUser);
+				
 		window.add(panel);
 		window.setSize(300, 300);
 		window.setLocationRelativeTo(null);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
+	}
+
+	/**
+	 * @return the cmbUser
+	 */
+	public JComboBox<String> getCmbUser() {
+		return cmbUser;
+	}
+
+	/**
+	 * @param cmbUser the cmbUser to set
+	 */
+	public void setCmbUser(JComboBox<String> cmbUser) {
+		this.cmbUser = cmbUser;
 	}
 
 	public JButton getAddButton() {
@@ -82,5 +104,9 @@ public class View {
 				listModel.removeElementAt(i);;
 			}
 		}
+	}
+	
+	public void addToUserCombobox(String name) {
+		cmbUser.addItem(name);
 	}
 }

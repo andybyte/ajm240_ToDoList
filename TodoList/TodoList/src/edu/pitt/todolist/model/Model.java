@@ -15,13 +15,14 @@ public class Model {
 	private Vector<ListItem> todoList;
 	private Vector<User> userList;
 	private Connection connector;
-	private HashMap mapTodoToUser;
-	
+	private HashMap<Long,Long> mapTodoToUser;
+	private int currentUser;
 	
 	public Model() {
 		this.todoList = new Vector<ListItem>();
 		this.userList = new Vector<User>();
-		this.mapTodoToUser = new HashMap();
+		this.mapTodoToUser = new HashMap<Long,Long>();	
+		this.currentUser = 0;
 		
 		// Parts to create a connection to the databases:
 		String strServerAddress = "jdbc:mysql://sis-teach-01.sis.pitt.edu:3306/ajm240is1017";
@@ -53,7 +54,7 @@ public class Model {
 			e.printStackTrace();
 		}	
 		
-		// Connect to Users database and add each item to the Model's Vector of ListItems:
+		// Connect to Users database and add each item to the Model's Vector of Users:
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 				connector = DriverManager.getConnection(strServerAddress,strUserName,strPassword);
@@ -76,7 +77,7 @@ public class Model {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}	
 		
 		// Create the mapping table Todos_Users
 		try {
@@ -86,8 +87,7 @@ public class Model {
 				String qry = "SELECT * FROM ajm240is1017.Todos_Users;";
 				ResultSet rs = statement.executeQuery(qry);
 				while(rs.next()) {
-//					this.userList.add(new User(rs.getInt("idUsers"),rs.getString("FirstName"), rs.getString("LastName")));
-					this.mapTodoToUser.put(rs.getInt("todo_id"), rs.getInt("user_id"));
+					this.mapTodoToUser.put(new Long(rs.getInt("todo_id")), new Long(rs.getInt("user_id")));
 				}	
 				rs.close();
 		} catch (InstantiationException e) {
@@ -102,7 +102,7 @@ public class Model {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}			
+		}	
 		
 	}
 
@@ -166,11 +166,14 @@ public class Model {
 					String qryAddNew = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"');";
 					Statement statementNew = this.connector.createStatement();
 					statementNew.execute(qryAddNew);
-					// Add new mapping
-					String qryAddNewMap = "INSERT INTO `ajm240is1017`.`Todos_Users` (`todo_id`, `user_id`) VALUES ('" + newID + "', '"+1009+"');";
+					
+					// Add to mapping
+					String qryAddNewMap = "INSERT INTO `ajm240is1017`.`Todos_Users` (`todo_id`, `user_id`) VALUES ('" + newID + "', '"+this.currentUser+"');";
 					Statement statementNewMap = this.connector.createStatement();
-					statementNew.execute(qryAddNewMap);
+					statementNewMap.execute(qryAddNewMap);
+					this.mapTodoToUser.put(new Long(newID), new Long(this.currentUser));
 					System.out.println("Map Added at " + newID);
+					
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -207,6 +210,14 @@ public class Model {
 				String qry = "DELETE FROM `ajm240is1017`.`Todos` WHERE `idTodos`='"+i+"';";
 				statement.execute(qry);
 				System.out.println("Item Removed at " + i);	
+				
+				// Remove from mapping
+				String qryRemoveFromMap = "DELETE FROM `ajm240is1017`.`Todos_Users` WHERE `todo_id`='"+i+"';";
+//				DELETE FROM `ajm240is1017`.`Todos_Users` WHERE `todo_id`='6';
+				Statement statementRemoveFromMap = this.connector.createStatement();
+				statementRemoveFromMap.execute(qryRemoveFromMap);
+				this.mapTodoToUser.remove(i, this.currentUser);
+				System.out.println("Map removed at " + i);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -217,5 +228,23 @@ public class Model {
 
 	public Vector<ListItem> getList() {
 		return todoList;
+	}
+	
+	public Vector<User> getUserList() {
+		return userList;
+	}
+
+	/**
+	 * @return the currentUser
+	 */
+	public int getCurrentUser() {
+		return currentUser;
+	}
+
+	/**
+	 * @param currentUser the currentUser to set
+	 */
+	public void setCurrentUser(int currentUser) {
+		this.currentUser = currentUser;
 	}
 }

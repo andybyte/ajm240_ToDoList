@@ -5,9 +5,6 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
-
 public class DeleteButtonListener implements ActionListener {
 	Controller controller;
 	
