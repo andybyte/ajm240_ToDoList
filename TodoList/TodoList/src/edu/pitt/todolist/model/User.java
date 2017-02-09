@@ -14,9 +14,9 @@ public class User {
 	private String lastName;
 	
 	/**
-	 * @param userID
-	 * @param firstName
-	 * @param lastName
+	 * @param userID Unique ID for the user.
+	 * @param firstName User's first name.
+	 * @param lastName User's last name.
 	 */
 	
 	// User constructor

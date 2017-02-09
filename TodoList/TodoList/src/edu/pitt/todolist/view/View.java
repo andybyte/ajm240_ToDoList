@@ -11,6 +11,11 @@ import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * @coauthor andymrkva
+ *
+ */
+
 public class View {
 	private JFrame window;
 	private JButton addButton;
@@ -54,6 +59,8 @@ public class View {
 		JLabel userLabel = new JLabel("Assigning task to:");
 		panel.add(userLabel);
 		
+		// Combobox to select the user to assign the task.
+		
 		cmbUser = new JComboBox<String>();
 		panel.add(cmbUser);
 				
@@ -65,7 +72,7 @@ public class View {
 	}
 
 	/**
-	 * @return the cmbUser
+	 * @return the cmbUser contains the names of all the users in the User Database.
 	 */
 	public JComboBox<String> getCmbUser() {
 		return cmbUser;

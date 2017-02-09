@@ -1,5 +1,10 @@
 package edu.pitt.todolist.model;
 
+/**
+ * @coauthor andymrkva
+ *
+ */
+
 import java.sql.Timestamp;
 
 public class ListItem {
@@ -14,10 +19,6 @@ public class ListItem {
 		this.idTodos = idTodos;
 		this.timeStamp = timeStamp;
 	}
-
-//	public ListItem(String description) {
-//		this.description = description;
-//	}
 	
 	public String getDescription() {
 		return description;

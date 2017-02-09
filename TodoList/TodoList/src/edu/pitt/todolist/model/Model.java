@@ -1,5 +1,10 @@
 package edu.pitt.todolist.model;
 
+/**
+ * @coauthor andymrkva
+ *
+ */
+
 import java.util.HashMap;
 import java.util.Vector;
 import java.sql.*;
@@ -106,6 +111,11 @@ public class Model {
 		
 	}
 
+	/**
+	 * @param idTodos Unique ID for the task.
+	 * @param description Description of the task.
+	 * @param timeStamp Timestamp of the task.
+	 */
 	public void addListItem(int idTodos, String description, Timestamp timeStamp) {
 		int checkString = 0;
 		int newID = 0;
@@ -187,6 +197,10 @@ public class Model {
 		
 	}
 	
+	/**
+	 * @param description Description of the task.
+	 */
+	
 	public void deleteListItem(String description) {
 		
 		// Grab which items are selected and delete them from the model and the database.
@@ -235,7 +249,7 @@ public class Model {
 	}
 
 	/**
-	 * @return the currentUser
+	 * @return the currentUser so that we can assign them to the new task.
 	 */
 	public int getCurrentUser() {
 		return currentUser;

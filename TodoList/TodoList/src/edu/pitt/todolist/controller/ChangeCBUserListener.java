@@ -18,6 +18,7 @@ public class ChangeCBUserListener implements ActionListener {
 		this.controller = controller;
 	}
 	
+	// Retrieve the current user from the View's combobox and store it into the model for assigning tasks.
 	public void actionPerformed(ActionEvent e) {
 		int i = this.controller.getView().getCmbUser().getSelectedIndex();
 		int id = this.controller.getModel().getUserList().get(i).getUserID();
