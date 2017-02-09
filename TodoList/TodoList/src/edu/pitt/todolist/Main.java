@@ -1,5 +1,10 @@
 package edu.pitt.todolist;
 
+/**
+ * @coauthor andymrkva
+ *
+ */
+
 import edu.pitt.todolist.controller.Controller;
 import edu.pitt.todolist.model.Model;
 import edu.pitt.todolist.view.View;
