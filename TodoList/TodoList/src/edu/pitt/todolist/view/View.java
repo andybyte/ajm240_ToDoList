@@ -1,6 +1,7 @@
 package edu.pitt.todolist.view;
 
 import java.awt.FlowLayout;
+import java.util.Enumeration;
 import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,6 +17,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
@@ -127,10 +129,33 @@ public class View {
 		return jtxtField;
 	}
 
-	public void addToList(String description, int parentID, DefaultMutableTreeNode parent) {
+	public void addToList(int todoID, String description, String parentDesc) {
 //		listModel.addElement(description);
+		
+		// Add the task to the root or the parent (latter: using recursion).
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
 		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(description);
-		treeModel.insertNodeInto(newNode, parent, 0);
+		DefaultMutableTreeNode parent = new DefaultMutableTreeNode();
+		
+		if (parentDesc.equals("")) {
+			// Add to the root.
+			treeModel.insertNodeInto(newNode, root, root.getChildCount());
+		} else {
+			// Find the parent node and add as a child.
+			// Need recursion to determine parent node for inserting child.
+			
+			Enumeration<DefaultMutableTreeNode> en = root.depthFirstEnumeration();
+			while (en.hasMoreElements()) {
+			  // Unfortunately the enumeration isn't genericised so we need to downcast
+			  // when calling nextElement():
+			  DefaultMutableTreeNode node = (DefaultMutableTreeNode) en.nextElement();
+			  if (node.getUserObject().equals(parentDesc)) {
+				  parent = node;
+			  }
+			}
+			
+			treeModel.insertNodeInto(newNode, parent, parent.getChildCount());
+		}
 		
 // putting the below on pause while I work on AddButtonListener
 //		DefaultTreeModel treeModel = (DefaultTreeModel) treeTodos.getModel();

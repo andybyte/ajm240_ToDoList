@@ -58,7 +58,18 @@ public class AddButtonListener implements ActionListener {
 	    
 //			int parent = controller.getView().getSelectedTask();
 			controller.getModel().addListItem(0, desc, timeStamp, parentID);
-			controller.getView().addToList(desc, parentID, parent);
-			controller.getView().getInput().setText("");
+			
+			
+			// Fetch TodoID 
+			Vector<ListItem> items = controller.getModel().getList();
+	 		for (ListItem item : items) {
+	 			if(item.getDescription().equals(desc)) {
+	 				int todoID = item.getIdTodos();
+	 				controller.getView().addToList(todoID, desc, parentID);
+	 				controller.getView().getInput().setText("");
+	 			}
+	 		}
+	 		
+			
 	  }
 }

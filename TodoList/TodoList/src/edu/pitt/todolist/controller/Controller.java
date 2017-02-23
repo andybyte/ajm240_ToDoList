@@ -7,6 +7,8 @@ package edu.pitt.todolist.controller;
 
 import java.util.Vector;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import edu.pitt.todolist.model.ListItem;
 import edu.pitt.todolist.model.Model;
 import edu.pitt.todolist.model.User;
@@ -40,10 +42,9 @@ public class Controller {
 			int todoID = item.getIdTodos();
 			String desc = item.getDescription();
 			int parentID = item.getParentID();
-			
-			// Need recursion to determine parent node for inserting child.
-			DefaultMutableTreeNode parentNode = this.getModel()
-			this.getView().addToList(todoID, desc, parentID);
+			String parentDesc = this.getModel().getDescriptionFromID(parentID);
+			System.out.println("parentDesc is " + parentDesc + "<");
+			this.getView().addToList(todoID, desc, parentDesc);
 		}
 		
 		// Create a vector from the model for users.

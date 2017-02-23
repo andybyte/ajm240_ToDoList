@@ -264,4 +264,13 @@ public class Model {
 	public void setCurrentUser(int currentUser) {
 		this.currentUser = currentUser;
 	}
+	
+	public String getDescriptionFromID (int id) {
+		for (ListItem item: this.getList()) {
+			if (item.getIdTodos() == id) {
+				return item.getDescription();
+			}
+		}
+		return "";
+	}
 }
