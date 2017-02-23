@@ -7,9 +7,18 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.AbstractButton;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreeSelectionModel;
 
 /**
  * @coauthor andymrkva
@@ -24,24 +33,41 @@ public class View {
 	private DefaultListModel listModel;
 	private JTextField jtxtField;
 	private JComboBox<String> cmbUser;
+	private JTree treeTodos;
+	private DefaultTreeModel treeModel;
 	
 	public View() {
 		window = new JFrame("ToDoList");
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout());
-
 	    JPanel listPanel = new JPanel();
 	    
-	    // Building a list
-		listModel = new DefaultListModel();
+	    // Building a JTree
+	    DefaultMutableTreeNode top = new DefaultMutableTreeNode("To Do List");
+
+	    if (top.equals("To Do List")) {
+	    	System.out.print("node is a string");
+	    } else {
+	    	System.out.print("node is NOT a string");
+	    }
+	    
+	    treeModel = new DefaultTreeModel(top);
+	    treeTodos = new JTree(treeModel);
+
+	    //Where the tree is initialized:
+	    treeTodos.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+	 
+    
+	    listModel = new DefaultListModel();
 		todoList = new JList(listModel);
 		
 		
-	    listPanel.add(todoList);
+		
+	    listPanel.add(treeTodos);
 	    
 	    panel.add(listPanel);
 
-		JLabel label = new JLabel("Please enter task:");
+		JLabel label = new JLabel("Please select parent and enter task:");
 		panel.add(label);
 		
 		jtxtField = new JTextField("list item");
@@ -93,16 +119,23 @@ public class View {
 		return deleteButton;
 	}
 
-	public JList<String> getTodoList() {
-		return todoList;
+	public JTree getTodoList() {
+		return treeTodos;
 	}
 
 	public JTextField getInput() {
 		return jtxtField;
 	}
 
-	public void addToList(String description) {
-		listModel.addElement(description);
+	public void addToList(String description, int parentID, DefaultMutableTreeNode parent) {
+//		listModel.addElement(description);
+		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(description);
+		treeModel.insertNodeInto(newNode, parent, 0);
+		
+// putting the below on pause while I work on AddButtonListener
+//		DefaultTreeModel treeModel = (DefaultTreeModel) treeTodos.getModel();
+//	    DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
+//		root.add(new DefaultMutableTreeNode(description));
 	}
 
 	public void removeFromList(Vector<String> selectedItems) {
@@ -115,5 +148,42 @@ public class View {
 	
 	public void addToUserCombobox(String name) {
 		cmbUser.addItem(name);
+	}
+	
+	public int getSelectedTask() {
+		DefaultTreeModel treeModel = (DefaultTreeModel) treeTodos.getModel();
+	    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeTodos.getLastSelectedPathComponent();
+	    System.out.print(selectedNode);
+	    return 1;
+	}
+	
+	public void valueChanged(TreeSelectionEvent e) {
+	    //Returns the last path element of the selection.
+	    //This method is useful only when the selection model allows a single selection.
+	    DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeTodos.getLastSelectedPathComponent();
+
+	    if (node == null)
+	    //Nothing is selected.  
+	    return;
+
+	    Object nodeInfo = node.getUserObject();
+
+	    if (node.isLeaf()) {
+//	        BookInfo book = (BookInfo) nodeInfo;
+//	        displayURL(book.bookURL);
+	    	System.out.print("help");
+	    } else {
+//	        displayURL(helpURL);
+	    	System.out.print("else");
+	    }
+
+	}
+
+	public JTree getJTreeParent() {
+		return treeTodos;
+	}
+	
+	public DefaultTreeModel getTreeModel() {
+		return treeModel;
 	}
 }

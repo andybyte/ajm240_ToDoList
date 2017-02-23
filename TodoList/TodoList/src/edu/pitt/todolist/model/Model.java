@@ -42,7 +42,7 @@ public class Model {
 				String qry = "SELECT * FROM ajm240is1017.Todos;";
 				ResultSet rs = statement.executeQuery(qry);
 				while(rs.next()) {
-					this.todoList.add(new ListItem(rs.getInt("idTodos"),rs.getString("Description"), rs.getTimestamp("timeStamp")));
+					this.todoList.add(new ListItem(rs.getInt("idTodos"),rs.getString("Description"), rs.getTimestamp("Timestamp"), rs.getInt("parentID")));
 				}	
 				rs.close();
 		} catch (InstantiationException e) {
@@ -116,9 +116,9 @@ public class Model {
 	 * @param description Description of the task.
 	 * @param timeStamp Timestamp of the task.
 	 */
-	public void addListItem(int idTodos, String description, Timestamp timeStamp) {
+	public void addListItem(int idTodos, String description, Timestamp timeStamp, int parentID) {
 		int checkString = 0;
-		int newID = 0;
+		int newID = 1;
 		int rowCount = 0;
 		
 		// Check to see if the task is empty or a string:
@@ -154,8 +154,8 @@ public class Model {
 				rs.close();
 				
 				if (rowCount == 0) {
-					// The table is empty and we can insert a 0 ID task.
-					String qryAddZero = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"');";
+					// The table is empty and we can insert a 1 ID task.
+					String qryAddZero = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`, `parentID`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"','"+parentID+"');";
 					Statement statementZero = this.connector.createStatement();
 					statementZero.execute(qryAddZero);
 					System.out.println("Item Added at " + newID);
@@ -173,8 +173,10 @@ public class Model {
 					rsMax.close();
 					
 					// Create a new task in the database.
-					String qryAddNew = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"');";
+					String qryAddNew = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`, `parentID`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"','"+parentID+"');";
 					Statement statementNew = this.connector.createStatement();
+					System.out.println(parentID);
+					System.out.println(qryAddNew);
 					statementNew.execute(qryAddNew);
 					
 					// Add to mapping
@@ -247,6 +249,7 @@ public class Model {
 	public Vector<User> getUserList() {
 		return userList;
 	}
+	
 
 	/**
 	 * @return the currentUser so that we can assign them to the new task.

@@ -13,11 +13,13 @@ public class ListItem {
 	private String description;
 	private int idTodos;
 	private Timestamp timeStamp; 
+	private int parentID;
 	
-	public ListItem(int idTodos, String description, java.sql.Timestamp timeStamp) {
+	public ListItem(int idTodos, String description, java.sql.Timestamp timeStamp, int parentID) {
 		this.description = description;
 		this.idTodos = idTodos;
 		this.timeStamp = timeStamp;
+		this.setParentID(parentID);
 	}
 	
 	public String getDescription() {
@@ -42,6 +44,20 @@ public class ListItem {
 
 	public void setTimeStamp(Timestamp timeStamp) {
 		this.timeStamp = timeStamp;
+	}
+
+	/**
+	 * @return the parentID
+	 */
+	public int getParentID() {
+		return parentID;
+	}
+
+	/**
+	 * @param parentID the parentID to set
+	 */
+	public void setParentID(int parentID) {
+		this.parentID = parentID;
 	}
 
 

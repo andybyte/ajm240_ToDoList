@@ -16,6 +16,7 @@ public class Controller {
 	private AddButtonListener addButtonListener;
 	private DeleteButtonListener deleteButtonListener;
 	private ChangeCBUserListener changeCBUserListener;
+	private ChangeParentListener changeParentListener;
 	private View view;
 	private Model model;
 	
@@ -29,14 +30,20 @@ public class Controller {
 		view.getAddButton().addActionListener(new AddButtonListener(this));
 		view.getDeleteButton().addActionListener(new DeleteButtonListener(this));
 		view.getCmbUser().addActionListener(new ChangeCBUserListener(this));
+		view.getJTreeParent().addTreeSelectionListener(new ChangeParentListener(this));
 		
 		// Create a vector from the model for tasks.
 		listFromDB = this.model.getList();
 		
 		// Cycle through vector and add each item to the view's list.
 		for (ListItem item : listFromDB) {
+			int todoID = item.getIdTodos();
 			String desc = item.getDescription();
-			this.getView().addToList(desc);
+			int parentID = item.getParentID();
+			
+			// Need recursion to determine parent node for inserting child.
+			DefaultMutableTreeNode parentNode = this.getModel()
+			this.getView().addToList(todoID, desc, parentID);
 		}
 		
 		// Create a vector from the model for users.
@@ -60,6 +67,10 @@ public class Controller {
 	
 	public ChangeCBUserListener getChangeCBUserListener() {
 		return changeCBUserListener;
+	}
+	
+	public ChangeParentListener getChangeParentListener() {
+		return changeParentListener;
 	}
 
 	public View getView() {
