@@ -46,13 +46,7 @@ public class View {
 	    
 	    // Building a JTree
 	    DefaultMutableTreeNode top = new DefaultMutableTreeNode("To Do List");
-
-	    if (top.equals("To Do List")) {
-	    	System.out.print("node is a string");
-	    } else {
-	    	System.out.print("node is NOT a string");
-	    }
-	    
+   
 	    treeModel = new DefaultTreeModel(top);
 	    treeTodos = new JTree(treeModel);
 
@@ -129,7 +123,7 @@ public class View {
 		return jtxtField;
 	}
 
-	public void addToList(int todoID, String description, String parentDesc) {
+	public void addToList(String description, String parentDesc) {
 //		listModel.addElement(description);
 		
 		// Add the task to the root or the parent (latter: using recursion).
@@ -173,13 +167,6 @@ public class View {
 	
 	public void addToUserCombobox(String name) {
 		cmbUser.addItem(name);
-	}
-	
-	public int getSelectedTask() {
-		DefaultTreeModel treeModel = (DefaultTreeModel) treeTodos.getModel();
-	    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeTodos.getLastSelectedPathComponent();
-	    System.out.print(selectedNode);
-	    return 1;
 	}
 	
 	public void valueChanged(TreeSelectionEvent e) {

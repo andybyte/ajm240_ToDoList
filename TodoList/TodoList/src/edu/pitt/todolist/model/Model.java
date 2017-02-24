@@ -7,6 +7,9 @@ package edu.pitt.todolist.model;
 
 import java.util.HashMap;
 import java.util.Vector;
+
+import javax.swing.JOptionPane;
+
 import java.sql.*;
 
 //The following steps are involved with making a typical database query:
@@ -116,7 +119,7 @@ public class Model {
 	 * @param description Description of the task.
 	 * @param timeStamp Timestamp of the task.
 	 */
-	public void addListItem(int idTodos, String description, Timestamp timeStamp, int parentID) {
+	public void addListItem(String description, Timestamp timeStamp, int parentID) {
 		int checkString = 0;
 		int newID = 1;
 		int rowCount = 0;
@@ -158,7 +161,6 @@ public class Model {
 					String qryAddZero = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`, `parentID`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"','"+parentID+"');";
 					Statement statementZero = this.connector.createStatement();
 					statementZero.execute(qryAddZero);
-					System.out.println("Item Added at " + newID);
 					rs.close();
 					
 				} else {
@@ -168,15 +170,15 @@ public class Model {
 					Statement statementMax = this.connector.createStatement();
 					ResultSet rsMax = statementMax.executeQuery(getMax);
 					while (rsMax.next()) {
-						newID = Integer.parseInt(rsMax.getString(1)) + 1;	
+						System.out.println(newID);
+						newID = Integer.parseInt(rsMax.getString(1)) + 1;
+						System.out.println(newID);
 					}
 					rsMax.close();
 					
 					// Create a new task in the database.
 					String qryAddNew = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`, `parentID`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"','"+parentID+"');";
 					Statement statementNew = this.connector.createStatement();
-					System.out.println(parentID);
-					System.out.println(qryAddNew);
 					statementNew.execute(qryAddNew);
 					
 					// Add to mapping
@@ -184,9 +186,12 @@ public class Model {
 					Statement statementNewMap = this.connector.createStatement();
 					statementNewMap.execute(qryAddNewMap);
 					this.mapTodoToUser.put(new Long(newID), new Long(this.currentUser));
-					System.out.println("Map Added at " + newID);
-					
+
 				}
+				
+				// Add to Vector of items.
+				this.todoList.add(new ListItem(newID, description, timeStamp, parentID));
+				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -195,6 +200,7 @@ public class Model {
 		} else {
 			// Item already exists or the task string is empty.
 			System.out.println("The task already exists or the field is empty. Please add a new task.");
+			JOptionPane.showMessageDialog(null, "The task already exists or the field is empty. Please add a new task.");
 		}
 		
 	}
@@ -225,7 +231,6 @@ public class Model {
 				statement = this.connector.createStatement();
 				String qry = "DELETE FROM `ajm240is1017`.`Todos` WHERE `idTodos`='"+i+"';";
 				statement.execute(qry);
-				System.out.println("Item Removed at " + i);	
 				
 				// Remove from mapping
 				String qryRemoveFromMap = "DELETE FROM `ajm240is1017`.`Todos_Users` WHERE `todo_id`='"+i+"';";
@@ -233,7 +238,6 @@ public class Model {
 				Statement statementRemoveFromMap = this.connector.createStatement();
 				statementRemoveFromMap.execute(qryRemoveFromMap);
 				this.mapTodoToUser.remove(i, this.currentUser);
-				System.out.println("Map removed at " + i);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

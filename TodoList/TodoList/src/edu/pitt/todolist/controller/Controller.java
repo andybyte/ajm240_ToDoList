@@ -39,12 +39,11 @@ public class Controller {
 		
 		// Cycle through vector and add each item to the view's list.
 		for (ListItem item : listFromDB) {
-			int todoID = item.getIdTodos();
 			String desc = item.getDescription();
 			int parentID = item.getParentID();
 			String parentDesc = this.getModel().getDescriptionFromID(parentID);
-			System.out.println("parentDesc is " + parentDesc + "<");
-			this.getView().addToList(todoID, desc, parentDesc);
+			this.getView().addToList(desc, parentDesc);
+			this.getView().getTodoList().expandRow(0);
 		}
 		
 		// Create a vector from the model for users.

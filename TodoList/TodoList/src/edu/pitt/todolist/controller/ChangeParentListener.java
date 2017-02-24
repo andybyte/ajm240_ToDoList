@@ -36,18 +36,6 @@ public class ChangeParentListener implements TreeSelectionListener{
 	    return;
 
 	    Object nodeInfo = node.getUserObject();
-	    
-	    if (nodeInfo.equals("Invite friend for lunch")) {
-//	    	System.out.println(node);
-	    }
-	    if (node.isLeaf()) {
-//	    	System.out.print(node);
-//	        BookInfo book = (BookInfo) nodeInfo;
-//	        displayURL(book.bookURL);
-	    } else {
-//	    	System.out.print(node);
-//	        displayURL(helpURL);
-	    }
     }
 
 }

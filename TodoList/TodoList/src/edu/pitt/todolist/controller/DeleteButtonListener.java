@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 public class DeleteButtonListener implements ActionListener {
 	Controller controller;
 	
@@ -17,16 +19,20 @@ public class DeleteButtonListener implements ActionListener {
 		this.controller = controller;
 	}
 	
-	public void actionPerformed(ActionEvent e) {	
+	public void actionPerformed(ActionEvent e) {
 		
 		// Retrieve selected tasks from the View for removal.
 		
-		List<String> selectedItems = controller.getView().getTodoList().getSelectedValuesList();
-		Vector<String> selectedItemVector = new Vector<String>();
-		for (String selectedItem : selectedItems) {
-			controller.getModel().deleteListItem(selectedItem);
-			selectedItemVector.add(selectedItem);
-		}
-		controller.getView().removeFromList(selectedItemVector);
+	    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) controller.getView().getJTreeParent().getLastSelectedPathComponent();
+		
+	    if (selectedNode != null) {
+	    	String description = selectedNode.getUserObject().toString();
+
+			Vector<String> selectedItemVector = new Vector<String>();
+			selectedItemVector.addElement(description);
+			controller.getModel().deleteListItem(description);	
+			controller.getView().removeFromList(selectedItemVector);
+			controller.getView().getTreeModel().removeNodeFromParent(selectedNode);
+	    }
     }
 }
