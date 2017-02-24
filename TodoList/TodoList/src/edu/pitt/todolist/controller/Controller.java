@@ -7,8 +7,6 @@ package edu.pitt.todolist.controller;
 
 import java.util.Vector;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import edu.pitt.todolist.model.ListItem;
 import edu.pitt.todolist.model.Model;
 import edu.pitt.todolist.model.User;
@@ -18,11 +16,11 @@ public class Controller {
 	private AddButtonListener addButtonListener;
 	private DeleteButtonListener deleteButtonListener;
 	private ChangeCBUserListener changeCBUserListener;
-	private ChangeParentListener changeParentListener;
 	private View view;
 	private Model model;
 	
 	public Controller(View view, Model model) {
+		
 		// Use a vector to grab the list from the model and send it to the View to update the view's list.
 		Vector<ListItem> listFromDB;
 		Vector<User> listOfUsers;
@@ -32,7 +30,6 @@ public class Controller {
 		view.getAddButton().addActionListener(new AddButtonListener(this));
 		view.getDeleteButton().addActionListener(new DeleteButtonListener(this));
 		view.getCmbUser().addActionListener(new ChangeCBUserListener(this));
-		view.getJTreeParent().addTreeSelectionListener(new ChangeParentListener(this));
 		
 		// Create a vector from the model for tasks.
 		listFromDB = this.model.getList();
@@ -69,10 +66,6 @@ public class Controller {
 		return changeCBUserListener;
 	}
 	
-	public ChangeParentListener getChangeParentListener() {
-		return changeParentListener;
-	}
-
 	public View getView() {
 		return view;
 	}

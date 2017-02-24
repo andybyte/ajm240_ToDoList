@@ -47,7 +47,7 @@ public class ListItem {
 	}
 
 	/**
-	 * @return the parentID
+	 * @return the parentID to the task.
 	 */
 	public int getParentID() {
 		return parentID;

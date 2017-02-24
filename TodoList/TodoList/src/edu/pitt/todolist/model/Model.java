@@ -115,7 +115,7 @@ public class Model {
 	}
 
 	/**
-	 * @param idTodos Unique ID for the task.
+	 * @param parentID ID for the parent of the task.
 	 * @param description Description of the task.
 	 * @param timeStamp Timestamp of the task.
 	 */
@@ -176,7 +176,7 @@ public class Model {
 					}
 					rsMax.close();
 					
-					// Create a new task in the database.
+					// Create a new task in the database and this time include the parent's ID.
 					String qryAddNew = "INSERT INTO `ajm240is1017`.`Todos` (`idTodos`, `Description`, `Timestamp`, `parentID`) VALUES ('" + newID + "', '"+description+"','"+timeStamp+"','"+parentID+"');";
 					Statement statementNew = this.connector.createStatement();
 					statementNew.execute(qryAddNew);
@@ -269,6 +269,11 @@ public class Model {
 		this.currentUser = currentUser;
 	}
 	
+	/**
+	 * 
+	 * @param id Look up ID for the task and return its description.
+	 * @return
+	 */
 	public String getDescriptionFromID (int id) {
 		for (ListItem item: this.getList()) {
 			if (item.getIdTodos() == id) {

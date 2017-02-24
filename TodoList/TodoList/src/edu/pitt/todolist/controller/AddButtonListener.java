@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -33,33 +32,29 @@ public class AddButtonListener implements ActionListener {
 
 		// Get the parent ID if there is a parent.
 	    DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) controller.getView().getJTreeParent().getLastSelectedPathComponent();
-
+	    
+	    // Get text for task.
 	    String desc = controller.getView().getInput().getText().trim();
 	    
+	    // Task must have a parent (root is the highest level). If it does, we'll add it to the list. 
 	    if (parentNode != null) {
 	    	
-	    	
 		    String parentInfo = parentNode.getUserObject().toString();
-		    System.out.println(parentInfo);
 		    
-		    if (parentNode.isRoot()) {
-		    	// We'll add task to the root level with a parentID of 0.
-		    	controller.getModel().addListItem(desc, timeStamp, parentID);
-		    	controller.getView().addToList(desc, parentNode.getUserObject().toString());
- 				controller.getView().getInput().setText("");
-		    	
-		    } else {
-			    // The user selected a task and we're going to add the new task as a child.
+		    // If parent is NOT the root we will get the parent ID.
+		    if (!parentNode.isRoot()) {
+			    // The user selected a task and we're going to add the new task to the Model using the Model's list to find the parent's ID.
 		    	Vector<ListItem> items1 = controller.getModel().getList();
 		 		for (ListItem item : items1) {
 		 			if(item.getDescription().equals(parentInfo)) {
 		 				parentID = item.getIdTodos();
 		 			}
 		 		}
-		 		controller.getModel().addListItem(desc, timeStamp, parentID);
+		 		
 		 	}	
+		    controller.getModel().addListItem(desc, timeStamp, parentID);
 		    
-		 // Check that the todo doesn't already exist on the JTree before adding it.
+		 // Check that the todo doesn't already exist on the JTree before adding it to the View.
 			Vector<ListItem> items2 = controller.getModel().getList();
 	 		for (ListItem item : items2) {
 	 			if(item.getTimeStamp() == timeStamp) {

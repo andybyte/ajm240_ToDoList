@@ -7,8 +7,6 @@ package edu.pitt.todolist.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
-import java.util.Vector;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -21,17 +19,14 @@ public class DeleteButtonListener implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		
-		// Retrieve selected tasks from the View for removal.
+		// Retrieve selected task from the View for removal.
 		
 	    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) controller.getView().getJTreeParent().getLastSelectedPathComponent();
 		
+	    // Check that a task is selected and then remove it from the Model and view.
 	    if (selectedNode != null) {
 	    	String description = selectedNode.getUserObject().toString();
-
-			Vector<String> selectedItemVector = new Vector<String>();
-			selectedItemVector.addElement(description);
 			controller.getModel().deleteListItem(description);	
-			controller.getView().removeFromList(selectedItemVector);
 			controller.getView().getTreeModel().removeNodeFromParent(selectedNode);
 	    }
     }

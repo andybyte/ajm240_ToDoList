@@ -2,24 +2,15 @@ package edu.pitt.todolist.view;
 
 import java.awt.FlowLayout;
 import java.util.Enumeration;
-import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.AbstractButton;
-import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
@@ -31,8 +22,6 @@ public class View {
 	private JFrame window;
 	private JButton addButton;
 	private JButton deleteButton;
-	private JList todoList;
-	private DefaultListModel listModel;
 	private JTextField jtxtField;
 	private JComboBox<String> cmbUser;
 	private JTree treeTodos;
@@ -50,17 +39,11 @@ public class View {
 	    treeModel = new DefaultTreeModel(top);
 	    treeTodos = new JTree(treeModel);
 
-	    //Where the tree is initialized:
+	    //Where the tree is initialized
 	    treeTodos.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 	 
-    
-	    listModel = new DefaultListModel();
-		todoList = new JList(listModel);
-		
-		
-		
+	    // Build out interface
 	    listPanel.add(treeTodos);
-	    
 	    panel.add(listPanel);
 
 		JLabel label = new JLabel("Please select parent and enter task:");
@@ -124,9 +107,8 @@ public class View {
 	}
 
 	public void addToList(String description, String parentDesc) {
-//		listModel.addElement(description);
-		
-		// Add the task to the root or the parent (latter: using recursion).
+
+		// Add the task to the root or the parent
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
 		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(description);
 		DefaultMutableTreeNode parent = new DefaultMutableTreeNode();
@@ -135,60 +117,21 @@ public class View {
 			// Add to the root.
 			treeModel.insertNodeInto(newNode, root, root.getChildCount());
 		} else {
-			// Find the parent node and add as a child.
-			// Need recursion to determine parent node for inserting child.
-			
+			// Find the parent node and add as a child.			
 			Enumeration<DefaultMutableTreeNode> en = root.depthFirstEnumeration();
 			while (en.hasMoreElements()) {
-			  // Unfortunately the enumeration isn't genericised so we need to downcast
-			  // when calling nextElement():
 			  DefaultMutableTreeNode node = (DefaultMutableTreeNode) en.nextElement();
 			  if (node.getUserObject().equals(parentDesc)) {
 				  parent = node;
 			  }
 			}
-			
+			// Now insert into the View's model to update the display.
 			treeModel.insertNodeInto(newNode, parent, parent.getChildCount());
-		}
-		
-// putting the below on pause while I work on AddButtonListener
-//		DefaultTreeModel treeModel = (DefaultTreeModel) treeTodos.getModel();
-//	    DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
-//		root.add(new DefaultMutableTreeNode(description));
-	}
-
-	public void removeFromList(Vector<String> selectedItems) {
-		for (int i = 0; i < listModel.size(); i++) {
-			if (selectedItems.contains(listModel.getElementAt(i))) {
-				listModel.removeElementAt(i);;
-			}
 		}
 	}
 	
 	public void addToUserCombobox(String name) {
 		cmbUser.addItem(name);
-	}
-	
-	public void valueChanged(TreeSelectionEvent e) {
-	    //Returns the last path element of the selection.
-	    //This method is useful only when the selection model allows a single selection.
-	    DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeTodos.getLastSelectedPathComponent();
-
-	    if (node == null)
-	    //Nothing is selected.  
-	    return;
-
-	    Object nodeInfo = node.getUserObject();
-
-	    if (node.isLeaf()) {
-//	        BookInfo book = (BookInfo) nodeInfo;
-//	        displayURL(book.bookURL);
-	    	System.out.print("help");
-	    } else {
-//	        displayURL(helpURL);
-	    	System.out.print("else");
-	    }
-
 	}
 
 	public JTree getJTreeParent() {
