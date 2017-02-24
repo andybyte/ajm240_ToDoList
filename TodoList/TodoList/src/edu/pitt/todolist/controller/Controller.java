@@ -1,5 +1,7 @@
 package edu.pitt.todolist.controller;
 
+import java.util.Arrays;
+
 /**
  * @coauthor andymrkva
  *
@@ -34,13 +36,28 @@ public class Controller {
 		// Create a vector from the model for tasks.
 		listFromDB = this.model.getList();
 		
-		// Cycle through vector and add each item to the view's list.
-		for (ListItem item : listFromDB) {
-			String desc = item.getDescription();
-			int parentID = item.getParentID();
-			String parentDesc = this.getModel().getDescriptionFromID(parentID);
-			this.getView().addToList(desc, parentDesc);
-			this.getView().getTodoList().expandRow(0);
+		int[] parentNodeArray = new int[listFromDB.size()];
+		for (int i = 0; i < listFromDB.size(); i++) {
+			parentNodeArray[i] = listFromDB.elementAt(i).getParentID();
+		}
+		
+		int[] uniqueParents = Arrays.stream(parentNodeArray).distinct().toArray();
+		Arrays.sort(uniqueParents);
+	
+		for (int parent : uniqueParents) {
+			// Cycle through vector and add each item to the view's list.
+			for (ListItem item : listFromDB) {
+				String desc = item.getDescription();
+				int parentID = item.getParentID();
+				
+				if (parentID == parent) {
+					String parentDesc = this.getModel().getDescriptionFromID(parentID);
+					System.out.println(desc + parentDesc);
+
+					this.getView().addToList(desc, parentDesc);
+					this.getView().getTodoList().expandRow(0);	
+				}
+			}	
 		}
 		
 		// Create a vector from the model for users.
